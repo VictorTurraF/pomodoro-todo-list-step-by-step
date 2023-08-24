@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Task from "./components/Task"
 import { rebootCss } from "./styles/reboot";
-import { Ul } from "./layouts/Ul";
 import { styled } from "@stitches/react";
 import { Box } from "./layouts/Box";
+import { Input } from "./layouts/Input";
+import { Button } from "./layouts/Button";
+import { List } from "./layouts/List";
 
 const AppGrid = styled("div", {
   display: "grid",
@@ -12,6 +14,13 @@ const AppGrid = styled("div", {
   maxWidth: "1000px",
   margin: "3rem auto",
 });
+
+const Form = styled("form", {
+  display: "grid",
+  gap: '.5rem',
+  gridTemplateColumns: "1fr 7rem 160px",
+  marginBottom: "1rem"
+})
 
 rebootCss();
 
@@ -27,6 +36,9 @@ function App() {
     event.preventDefault();
 
     const { target: [taskNameInput, taskPomodorosInput] } = event
+
+    if (!taskNameInput.value || !taskPomodorosInput.value)
+      return
 
     const newTask = {
       id: self.crypto.randomUUID(),
@@ -65,13 +77,12 @@ function App() {
     <AppGrid>
       <Box>Timer</Box>
       <Box>
-        <form onSubmit={handleSubmit}>
-          <input type="text" placeholder="Nome da tarefa" />
-          <input type="number" placeholder="Total de pomodoros" />
-          <button type="submit">Adicionar tarefa</button>
-        </form>
-        <hr/>
-        <Ul>
+        <Form onSubmit={handleSubmit}>
+          <Input type="text" placeholder="Nome da tarefa" />
+          <Input type="number" placeholder="Total de pomodoros" />
+          <Button type="submit">Adicionar tarefa</Button>
+        </Form>
+        <List>
           {tasks.map(task => (
             <Task
               id={task.id}
@@ -88,7 +99,7 @@ function App() {
               onFinishedChange={handleFinishedChange}
             />
           ))}
-        </Ul>
+        </List>
       </Box>
     </AppGrid>
   )

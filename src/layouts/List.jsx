@@ -1,6 +1,6 @@
 import { styled } from "@stitches/react";
 
-export const Ul = styled('ul', {
+export const List = styled('ul', {
   listStyle: "none",
   display: "flex",
   flexDirection: "column",
