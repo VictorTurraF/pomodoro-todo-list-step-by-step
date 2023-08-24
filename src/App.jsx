@@ -1,11 +1,26 @@
 import { useState } from "react";
 import Task from "./components/Task"
+import { rebootCss } from "./styles/reboot";
+import { Ul } from "./layouts/Ul";
+import { styled } from "@stitches/react";
+import { Box } from "./layouts/Box";
+
+const AppGrid = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "4fr 6fr",
+  gridGap: "2rem",
+  maxWidth: "1000px",
+  margin: "3rem auto",
+});
+
+rebootCss();
 
 function App() {
+  const [activeTaskId, setActiveTaskId] = useState();
   const [tasks, setTasks] = useState([
     { id: self.crypto.randomUUID(), name: "Inicializar o projeto", actPomodoros: 1, totalPomodoros: 3, isFinished: true },
-    { id: self.crypto.randomUUID(), name: "Implementar cabeçalho", actPomodoros: 1, totalPomodoros: 2, isFinished: false },
-    { id: self.crypto.randomUUID(), name: "Implementar rodapé", actPomodoros: 1, totalPomodoros: 1, isFinished: false },
+    { id: self.crypto.randomUUID(), name: "Implementar cabeçalho", actPomodoros: 0, totalPomodoros: 2, isFinished: false },
+    { id: self.crypto.randomUUID(), name: "Implementar rodapé", actPomodoros: 0, totalPomodoros: 1, isFinished: false },
   ])
 
   function handleSubmit(event) {
@@ -28,17 +43,21 @@ function App() {
     setTasks(prev => prev.filter(task => task.id !== taskId))
   }
 
+  function handleActiveClick({ taskId }) {
+    setActiveTaskId(taskId)
+  }
+
   return (
-    <div>
-      <div>Timer</div>
-      <div>
+    <AppGrid>
+      <Box>Timer</Box>
+      <Box>
         <form onSubmit={handleSubmit}>
           <input type="text" placeholder="Nome da tarefa" />
           <input type="number" placeholder="Total de pomodoros" />
           <button type="submit">Adicionar tarefa</button>
         </form>
         <hr/>
-        <div>
+        <Ul>
           {tasks.map(task => (
             <Task
               id={task.id}
@@ -46,13 +65,17 @@ function App() {
               name={task.name}
               actPomodoros={task.actPomodoros}
               totalPomodoros={task.totalPomodoros}
+
               isFinished={task.isFinished}
+              isActive={task.id === activeTaskId}
+
               onExcludeClick={handleExcludeClick}
+              onActiveClick={handleActiveClick}
             />
           ))}
-        </div>
-      </div>
-    </div>
+        </Ul>
+      </Box>
+    </AppGrid>
   )
 }
 
