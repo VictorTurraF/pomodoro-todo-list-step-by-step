@@ -1,5 +1,5 @@
 import { styled } from "@stitches/react"
-import { schema } from "../configs/theme"
+import { schema } from "../utils/theme"
 import { Button } from "../layouts/Button"
 
 const Row = styled('li', {

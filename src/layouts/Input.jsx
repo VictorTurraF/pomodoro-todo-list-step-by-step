@@ -1,5 +1,5 @@
 import { styled } from "@stitches/react";
-import { schema } from "../configs/theme";
+import { schema } from "../utils/theme";
 
 export const Input = styled('input', {
   border: `2px solid ${schema.white}`,

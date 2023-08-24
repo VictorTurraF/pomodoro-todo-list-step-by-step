@@ -1,54 +1,38 @@
 import { useState } from "react";
-import Task from "./components/Task"
 import { rebootCss } from "./styles/reboot";
 import { styled } from "@stitches/react";
 import { Box } from "./layouts/Box";
-import { Input } from "./layouts/Input";
-import { Button } from "./layouts/Button";
 import { List } from "./layouts/List";
+import { initialTaskList } from "./utils/mocks";
+import Task from "./components/Task"
+import TaskForm from "./components/TaskForm";
+import { createTask } from "./utils/creators";
 
-const AppGrid = styled("div", {
-  display: "grid",
-  gridTemplateColumns: "4fr 6fr",
-  gridGap: "2rem",
+const AppGrid = styled(Box, {
   maxWidth: "1000px",
   margin: "3rem auto",
 });
 
-const Form = styled("form", {
-  display: "grid",
-  gap: '.5rem',
-  gridTemplateColumns: "1fr 7rem 160px",
-  marginBottom: "1rem"
-})
-
 rebootCss();
 
 function App() {
-  const [activeTaskId, setActiveTaskId] = useState();
-  const [tasks, setTasks] = useState([
-    { id: self.crypto.randomUUID(), name: "Inicializar o projeto", actPomodoros: 1, totalPomodoros: 3, isFinished: true },
-    { id: self.crypto.randomUUID(), name: "Implementar cabeçalho", actPomodoros: 0, totalPomodoros: 2, isFinished: false },
-    { id: self.crypto.randomUUID(), name: "Implementar rodapé", actPomodoros: 0, totalPomodoros: 1, isFinished: false },
-  ])
+  const [activeTaskId, setActiveTaskId] = useState("");
+  const [tasks, setTasks] = useState(initialTaskList);
 
+  // Event handlers
   function handleSubmit(event) {
     event.preventDefault();
 
-    const { target: [taskNameInput, taskPomodorosInput] } = event
+    const [taskNameInput, taskPomodorosInput] = event.target;
 
-    if (!taskNameInput.value || !taskPomodorosInput.value)
-      return
+    if (!taskNameInput.value || !taskPomodorosInput.value) return;
+    
+    const newTask = createTask({
+      name: taskNameInput.value,
+      totalPomodoros: taskPomodorosInput.value
+    })
 
-    const newTask = {
-      id: self.crypto.randomUUID(),
-      name: String(taskNameInput.value),
-      actPomodoros: 0,
-      totalPomodoros: Number(taskPomodorosInput.value),
-      isFinished: false,
-    }
-
-    setTasks(prev => [...prev, newTask]);
+    setTasks((prev) => [...prev, newTask]);
   }
 
   function handleExcludeClick({ taskId }) {
@@ -60,47 +44,28 @@ function App() {
   }
 
   function handleFinishedChange({ taskId }) {
-    setTasks(prevTasks => {
-      return prevTasks.map(task => {
-        if (task.id === taskId) {
-          return {
-            ...task,
-            isFinished: !task.isFinished,
-          };
-        }
-        return task;
-      });
-    });
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, isFinished: !task.isFinished } : task
+      )
+    );
   }
 
   return (
     <AppGrid>
-      <Box>Timer</Box>
-      <Box>
-        <Form onSubmit={handleSubmit}>
-          <Input type="text" placeholder="Nome da tarefa" />
-          <Input type="number" placeholder="Total de pomodoros" />
-          <Button type="submit">Adicionar tarefa</Button>
-        </Form>
-        <List>
-          {tasks.map(task => (
-            <Task
-              id={task.id}
-              key={task.id}
-              name={task.name}
-              actPomodoros={task.actPomodoros}
-              totalPomodoros={task.totalPomodoros}
-
-              isFinished={task.isFinished}
-              isActive={task.id === activeTaskId}
-
-              onExcludeClick={handleExcludeClick}
-              onActiveClick={handleActiveClick}
-              onFinishedChange={handleFinishedChange}
-            />
-          ))}
-        </List>
-      </Box>
+      <TaskForm onSubmit={handleSubmit} />
+      <List>
+        {tasks.map(task => (
+          <Task
+            key={task.id}
+            {...task}
+            isActive={task.id === activeTaskId}
+            onExcludeClick={handleExcludeClick}
+            onActiveClick={handleActiveClick}
+            onFinishedChange={handleFinishedChange}
+          />
+        ))}
+      </List>
     </AppGrid>
   )
 }
