@@ -47,6 +47,20 @@ function App() {
     setActiveTaskId(taskId)
   }
 
+  function handleFinishedChange({ taskId }) {
+    setTasks(prevTasks => {
+      return prevTasks.map(task => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            isFinished: !task.isFinished,
+          };
+        }
+        return task;
+      });
+    });
+  }
+
   return (
     <AppGrid>
       <Box>Timer</Box>
@@ -71,6 +85,7 @@ function App() {
 
               onExcludeClick={handleExcludeClick}
               onActiveClick={handleActiveClick}
+              onFinishedChange={handleFinishedChange}
             />
           ))}
         </Ul>

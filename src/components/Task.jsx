@@ -65,13 +65,17 @@ function Task({
     onActiveClick({ event, taskId: id })
   }
 
+  function handleFinishedChange(event) {
+    onFinishedChange({ event, taskId: id })
+  }
+
   return (
     <Row isActive={isActive} onClick={handleActiveClick}>
       <input
         id={id}
         type="checkbox"
         name="isTaskFinished"
-        onChange={onFinishedChange}
+        onChange={handleFinishedChange}
         checked={isFinished}
       />
       <DescriptionCol isFinished={isFinished}>{name}</DescriptionCol>
