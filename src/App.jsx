@@ -42,6 +42,7 @@ function App() {
           {tasks.map(task => (
             <Task
               id={task.id}
+              key={task.id}
               name={task.name}
               actPomodoros={task.actPomodoros}
               totalPomodoros={task.totalPomodoros}

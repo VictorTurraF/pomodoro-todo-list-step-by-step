@@ -5,7 +5,8 @@ function Task({
   actPomodoros = 0,
   isFinished = false,
   isActive = false,
-  onExcludeClick = () => {}
+  onExcludeClick = () => {},
+  onFinishedChange = () => {}
 }) {
   function handleExcludeClick(event) {
     onExcludeClick({ event, taskId: id })
@@ -13,7 +14,13 @@ function Task({
 
   return (
     <div>
-      <input type="checkbox" name="isTaskFinished" id="" checked={isFinished} />
+      <input 
+        id={id}
+        type="checkbox" 
+        name="isTaskFinished" 
+        onChange={onFinishedChange}
+        checked={isFinished}
+      />
       <span>{name}</span>
       <span>{actPomodoros}/{totalPomodoros}</span>
       <button onClick={handleExcludeClick}>Excluir</button>
