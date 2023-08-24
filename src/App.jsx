@@ -3,9 +3,9 @@ import Task from "./components/Task"
 
 function App() {
   const [tasks, setTasks] = useState([
-    { name: "Inicializar o projeto", actPomodoros: 1, totalPomodoros: 3, isFinished: true },
-    { name: "Implementar cabeçalho", actPomodoros: 1, totalPomodoros: 2, isFinished: false },
-    { name: "Implementar rodapé", actPomodoros: 1, totalPomodoros: 1, isFinished: false },
+    { id: self.crypto.randomUUID(), name: "Inicializar o projeto", actPomodoros: 1, totalPomodoros: 3, isFinished: true },
+    { id: self.crypto.randomUUID(), name: "Implementar cabeçalho", actPomodoros: 1, totalPomodoros: 2, isFinished: false },
+    { id: self.crypto.randomUUID(), name: "Implementar rodapé", actPomodoros: 1, totalPomodoros: 1, isFinished: false },
   ])
 
   function handleSubmit(event) {
@@ -14,6 +14,7 @@ function App() {
     const { target: [taskNameInput, taskPomodorosInput] } = event
 
     const newTask = {
+      id: self.crypto.randomUUID(),
       name: String(taskNameInput.value),
       actPomodoros: 0,
       totalPomodoros: Number(taskPomodorosInput.value),
@@ -21,6 +22,10 @@ function App() {
     }
 
     setTasks(prev => [...prev, newTask]);
+  }
+
+  function handleExcludeClick({ taskId }) {
+    setTasks(prev => prev.filter(task => task.id !== taskId))
   }
 
   return (
@@ -36,10 +41,12 @@ function App() {
         <div>
           {tasks.map(task => (
             <Task
+              id={task.id}
               name={task.name}
               actPomodoros={task.actPomodoros}
               totalPomodoros={task.totalPomodoros}
               isFinished={task.isFinished}
+              onExcludeClick={handleExcludeClick}
             />
           ))}
         </div>
